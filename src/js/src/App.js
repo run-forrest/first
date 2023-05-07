@@ -1,7 +1,10 @@
 import { Component } from 'react';
+import Footer from './Footer';
 import './App.css';
+
 import { getAllStudents } from './client';
-import { Table, Avatar, Spin, } from 'antd';
+import AddStudentForm from './forms/AddStudentForm';
+import { Table, Avatar, Spin, Modal, } from 'antd';
 import { LoadingOutlined, } from '@ant-design/icons';
 import Container from './Container';
 
@@ -13,12 +16,16 @@ class App extends Component {
 
   state = {
     students: [],
-    isFetch: false
+    isFetch: false,
+    isAddStudentModalVisisble: false
   }
 
   componentDidMount() {
     this.fetchStudents();
   }
+
+  openAddStudentModal = ()=> this.setState({isAddStudentModalVisisble: true})
+  closeAddStudentModal = ()=> this.setState({isAddStudentModalVisisble: false})
 
   fetchStudents = () => {
     this.setState({
@@ -36,7 +43,7 @@ class App extends Component {
   }
 
   render() {
-    const { students, isFetch } = this.state;
+    const { students, isFetch, isAddStudentModalVisisble } = this.state;
 
     if (isFetch) {
       return <Container>
@@ -59,7 +66,19 @@ class App extends Component {
         { title: "Gender", dataIndex: "gender", key: "gender", },
       ];
 
-      return <Container><Table dataSource={students} columns={columns} pagination={false} rowKey='studentId' /></Container>;
+      return <Container>
+        <Table style={{marginBottom: '100px'}} dataSource={students} columns={columns} pagination={false} rowKey='studentId' />
+        <Modal title='Add new student'
+                visible={isAddStudentModalVisisble}
+                onOk={this.closeAddStudentModal}
+                onCancel={this.closeAddStudentModal}
+                width={1000}>
+                <AddStudentForm />
+        </Modal>
+        <Footer 
+          handleAddStudentClickEvent={this.openAddStudentModal}
+          numberOfStudents={students.length}></Footer>
+      </Container>;
 
       // return students.map((student, index) => {
       //   return <div id={index}>
