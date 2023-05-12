@@ -24,8 +24,8 @@ class App extends Component {
     this.fetchStudents();
   }
 
-  openAddStudentModal = ()=> this.setState({isAddStudentModalVisisble: true})
-  closeAddStudentModal = ()=> this.setState({isAddStudentModalVisisble: false})
+  openAddStudentModal = () => this.setState({ isAddStudentModalVisisble: true })
+  closeAddStudentModal = () => this.setState({ isAddStudentModalVisisble: false })
 
   fetchStudents = () => {
     this.setState({
@@ -67,15 +67,22 @@ class App extends Component {
       ];
 
       return <Container>
-        <Table style={{marginBottom: '100px'}} dataSource={students} columns={columns} pagination={false} rowKey='studentId' />
+        <Table style={{ marginBottom: '100px' }} dataSource={students} columns={columns} pagination={false} rowKey='studentId' />
         <Modal title='Add new student'
-                visible={isAddStudentModalVisisble}
-                onOk={this.closeAddStudentModal}
-                onCancel={this.closeAddStudentModal}
-                width={1000}>
-                <AddStudentForm />
+          open={isAddStudentModalVisisble}
+          onOk={this.closeAddStudentModal}
+          onCancel={this.closeAddStudentModal}
+          width={1000}>
+          <AddStudentForm
+            onSuccess={() => {
+              console.log('----close modal');
+              this.closeAddStudentModal();
+              this.fetchStudents();
+
+            }}
+          />
         </Modal>
-        <Footer 
+        <Footer
           handleAddStudentClickEvent={this.openAddStudentModal}
           numberOfStudents={students.length}></Footer>
       </Container>;
