@@ -4,7 +4,8 @@ import './App.css';
 
 import { getAllStudents } from './client';
 import AddStudentForm from './forms/AddStudentForm';
-import { Table, Avatar, Spin, Modal, } from 'antd';
+import { errorNotification } from './Notification';
+import { Table, Avatar, Spin, Modal, Empty, } from 'antd';
 import { LoadingOutlined, } from '@ant-design/icons';
 import Container from './Container';
 
@@ -39,7 +40,16 @@ class App extends Component {
             students,
             isFetch: false
           })
-        }));
+        }))
+        .catch(error => {
+          const message = error.error.message;
+          const description= error.error.error;
+          errorNotification(message, description);
+          this.setState({
+            isFetch: false
+          });
+          console.log(error);
+        });
   }
 
   render() {
@@ -97,9 +107,7 @@ class App extends Component {
       //   </div >
       // });
     }
-    return (
-      <div> No Student </div >
-    );
+    return <Empty description={<h1>No Student</h1>} />;
   }
 
 }
